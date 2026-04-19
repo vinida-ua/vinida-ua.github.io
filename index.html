@@ -1,81 +1,1152 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vinida — меблі на замовлення</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vinida — меблі на замовлення</title>
+  <style>
+    * { box-sizing: border-box; }
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #f5f5f5;
-}
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
 
-header {
-  background: #1f1f1f;
-  color: white;
-  padding: 40px;
-  text-align: center;
-}
+    a { text-decoration: none; color: inherit; }
 
-.container {
-  padding: 20px;
-}
+    .topbar {
+      background: #1d1d1d;
+      color: white;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
 
-.product {
-  background: white;
-  margin: 20px auto;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 600px;
-}
+    .brand {
+      font-size: 28px;
+      font-weight: bold;
+    }
 
-.product img {
-  width: 100%;
-  border-radius: 10px;
-}
+    .brand-sub {
+      font-size: 14px;
+      color: #cfcfcf;
+    }
 
-.btn {
-  display: inline-block;
-  margin-top: 10px;
-  padding: 10px 15px;
-  background: #0077ff;
-  color: white;
-  text-decoration: none;
-  border-radius: 6px;
-}
-</style>
+    .contact-btn {
+      background: #ffffff;
+      color: #1d1d1d;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .home-layout {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 24px;
+      padding: 24px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+
+    .carousel-wrap {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      position: relative;
+      min-height: 650px;
+    }
+
+    .carousel-slide {
+      display: none;
+      position: relative;
+      height: 650px;
+    }
+
+    .carousel-slide.active { display: block; }
+
+    .carousel-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .carousel-caption {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      background: rgba(0, 0, 0, 0.55);
+      color: white;
+      padding: 16px 18px;
+      border-radius: 14px;
+      max-width: 70%;
+    }
+
+    .carousel-caption h2 {
+      margin: 0 0 8px;
+      font-size: 32px;
+    }
+
+    .carousel-caption p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .carousel-controls {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      justify-content: space-between;
+      padding: 0 14px;
+      pointer-events: none;
+    }
+
+    .carousel-btn {
+      pointer-events: auto;
+      border: none;
+      background: rgba(255,255,255,0.9);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .dots {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 14px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.6);
+      cursor: pointer;
+    }
+
+    .dot.active { background: white; }
+
+    .sidebar {
+      background: white;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+      height: fit-content;
+      position: sticky;
+      top: 92px;
+    }
+
+    .sidebar h3 {
+      margin: 0 0 16px;
+      font-size: 24px;
+    }
+
+    .menu-item {
+      border-bottom: 1px solid #ececec;
+    }
+
+    .menu-btn {
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: left;
+      padding: 16px 0;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .submenu {
+      display: none;
+      padding: 0 0 12px 0;
+    }
+
+    .submenu.open { display: block; }
+
+    .submenu a {
+      display: block;
+      padding: 9px 0 9px 10px;
+      color: #444;
+      font-size: 15px;
+      border-left: 3px solid transparent;
+    }
+
+    .submenu a:hover {
+      border-left-color: #222;
+      color: #111;
+    }
+
+    .simple-link {
+      display: block;
+      padding: 14px 0;
+      font-size: 18px;
+      font-weight: 700;
+      border-bottom: 1px solid #ececec;
+    }
+
+    .listing-page,
+    .detail-page {
+      max-width: 1450px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .breadcrumbs {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+
+    .listing-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+    }
+
+    .listing-head h1,
+    .detail-head h1 {
+      margin: 0;
+      font-size: 36px;
+    }
+
+    .listing-head p,
+    .detail-head p {
+      margin: 6px 0 0;
+      color: #666;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background: #1d1d1d;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .product-card img {
+      width: 100%;
+      height: 290px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .product-card-body {
+      padding: 16px;
+    }
+
+    .product-card-body h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+    }
+
+    .product-card-body p {
+      margin: 0 0 8px;
+      color: #555;
+      line-height: 1.45;
+      font-size: 15px;
+    }
+
+    .product-meta {
+      font-size: 14px;
+      color: #777;
+    }
+
+    .detail-box {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 26px;
+      align-items: start;
+    }
+
+    .main-image-box {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .main-image-box img {
+      width: 100%;
+      height: 620px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .thumbs img {
+      width: 100%;
+      height: 110px;
+      object-fit: cover;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 3px solid transparent;
+      background: white;
+    }
+
+    .thumbs img.active {
+      border-color: #1d1d1d;
+    }
+
+    .detail-info {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    }
+
+    .detail-info h2 {
+      margin-top: 0;
+      font-size: 30px;
+    }
+
+    .detail-list {
+      padding-left: 18px;
+      line-height: 1.7;
+      color: #444;
+    }
+
+    .detail-contact {
+      margin-top: 20px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .detail-contact a {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-weight: bold;
+      display: inline-block;
+    }
+
+    .btn-dark {
+      background: #1d1d1d;
+      color: white;
+    }
+
+    .btn-light {
+      background: #ececec;
+      color: #111;
+    }
+
+    .footer {
+      margin-top: 40px;
+      background: #1d1d1d;
+      color: white;
+      padding: 24px;
+      text-align: center;
+    }
+
+    @media (max-width: 1200px) {
+      .home-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+
+      .detail-box {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .products-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .carousel-slide,
+      .carousel-wrap {
+        min-height: 420px;
+        height: 420px;
+      }
+
+      .main-image-box img {
+        height: 420px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .products-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .thumbs {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .brand {
+        font-size: 24px;
+      }
+
+      .listing-head h1,
+      .detail-head h1 {
+        font-size: 28px;
+      }
+
+      .carousel-caption {
+        max-width: calc(100% - 32px);
+      }
+
+      .carousel-caption h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <header class="topbar">
+    <div>
+      <div class="brand">Vinida</div>
+      <div class="brand-sub">Меблі на замовлення • Шафи • Кухні • Комоди • Ліжка</div>
+    </div>
+    <a class="contact-btn" href="#">Написати в Telegram</a>
+  </header>
 
-<header>
-  <h1>Vinida</h1>
-  <p>Меблі на замовлення</p>
-</header>
+  <main>
+    <section id="homePage" class="page active">
+      <div class="home-layout">
+        <div class="carousel-wrap">
+          <div class="carousel-slide active">
+            <img src="https://placehold.co/1200x650?text=Vinida+1" alt="Меблі 1">
+            <div class="carousel-caption">
+              <h2>Сучасні меблі для дому</h2>
+              <p>Комоди, шафи, кухні, столи, ліжка та інші меблі під замовлення.</p>
+            </div>
+          </div>
 
-<div class="container">
+          <div class="carousel-slide">
+            <img src="https://placehold.co/1200x650?text=Vinida+2" alt="Меблі 2">
+            <div class="carousel-caption">
+              <h2>Різні кольори та конфігурації</h2>
+              <p>Можливе виготовлення у різних розмірах, кольорах та комплектаціях.</p>
+            </div>
+          </div>
 
-<div class="product">
-  <h2>Шафа 2000×900×450</h2>
-  <img src="https://via.placeholder.com/600x400">
-  <p>3 варіанти: полиці / труба / комбінована</p>
-</div>
+          <div class="carousel-slide">
+            <img src="https://placehold.co/1200x650?text=Vinida+3" alt="Меблі 3">
+            <div class="carousel-caption">
+              <h2>Каталог готових варіантів</h2>
+              <p>Переглядай фото, обирай модель і пиши для уточнення деталей.</p>
+            </div>
+          </div>
 
-<div class="product">
-  <h2>Пенал 2000×400×450</h2>
-  <img src="https://via.placeholder.com/600x400">
-  <p>Лівий / правий варіант, різні кольори</p>
-</div>
+          <div class="carousel-controls">
+            <button class="carousel-btn" onclick="changeSlide(-1)">‹</button>
+            <button class="carousel-btn" onclick="changeSlide(1)">›</button>
+          </div>
 
-<div class="product">
-  <h2>Контакти</h2>
-  <p>Телефон: +380...</p>
-  <a class="btn" href="#">Написати в Telegram</a>
-</div>
+          <div class="dots" id="dots"></div>
+        </div>
 
-</div>
+        <aside class="sidebar">
+          <h3>Каталог</h3>
 
+          <div class="menu-item">
+            <button class="menu-btn" onclick="toggleSubmenu('komodyMenu')">
+              <span>Комоди</span>
+              <span>+</span>
+            </button>
+            <div id="komodyMenu" class="submenu">
+              <a href="#" onclick="openSubtype(event, 'komody-zvychayni')">Звичайні комоди</a>
+              <a href="#" onclick="openSubtype(event, 'komody-z-dvertsyatamy')">Комоди з дверцятами</a>
+              <a href="#" onclick="openSubtype(event, 'komody-rizni')">Різні комоди</a>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <button class="menu-btn" onclick="toggleSubmenu('shafyMenu')">
+              <span>Шафи</span>
+              <span>+</span>
+            </button>
+            <div id="shafyMenu" class="submenu">
+              <a href="#" onclick="openSubtype(event, 'shafy-z-dvertsyatamy')">Шафи з дверцятами</a>
+              <a href="#" onclick="openSubtype(event, 'shafy-kupe')">Шафи купе</a>
+            </div>
+          </div>
+
+          <div class="menu-item">
+            <button class="menu-btn" onclick="toggleSubmenu('kuhniMenu')">
+              <span>Кухні</span>
+              <span>+</span>
+            </button>
+            <div id="kuhniMenu" class="submenu">
+              <a href="#" onclick="openSubtype(event, 'kuhni-pryami')">Прямі кухні</a>
+              <a href="#" onclick="openSubtype(event, 'kuhni-kutovi')">Кутові кухні</a>
+            </div>
+          </div>
+
+          <a class="simple-link" href="#" onclick="openSubtype(event, 'vishalky')">Вішалки</a>
+          <a class="simple-link" href="#" onclick="openSubtype(event, 'obuvnytsi')">Обувниці</a>
+          <a class="simple-link" href="#" onclick="openSubtype(event, 'pryhozhi')">Прихожі</a>
+
+          <div class="menu-item">
+            <button class="menu-btn" onclick="toggleSubmenu('stolyMenu')">
+              <span>Столи</span>
+              <span>+</span>
+            </button>
+            <div id="stolyMenu" class="submenu">
+              <a href="#" onclick="openSubtype(event, 'stoly-kuhonni')">Кухонні столи</a>
+              <a href="#" onclick="openSubtype(event, 'stoly-pysmovi')">Письмові столи</a>
+              <a href="#" onclick="openSubtype(event, 'stoly-zhurnalni')">Столи журнальні</a>
+              <a href="#" onclick="openSubtype(event, 'stoly-rizni')">Різні столи</a>
+            </div>
+          </div>
+
+          <a class="simple-link" href="#" onclick="openSubtype(event, 'polytsi')">Полиці</a>
+
+          <div class="menu-item">
+            <button class="menu-btn" onclick="toggleSubmenu('lizhkaMenu')">
+              <span>Ліжка</span>
+              <span>+</span>
+            </button>
+            <div id="lizhkaMenu" class="submenu">
+              <a href="#" onclick="openSubtype(event, 'lizhka-odnospalni')">Односпальні ліжка</a>
+              <a href="#" onclick="openSubtype(event, 'lizhka-dvospalni')">Двохспальні ліжка</a>
+              <a href="#" onclick="openSubtype(event, 'lizhka-myaki')">М'які ліжка</a>
+              <a href="#" onclick="openSubtype(event, 'lizhka-rizni')">Різні ліжка</a>
+            </div>
+          </div>
+
+          <a class="simple-link" href="#" onclick="openSubtype(event, 'tv-tumby')">Тумби TV</a>
+          <a class="simple-link" href="#" onclick="openSubtype(event, 'rizne')">Різне</a>
+        </aside>
+      </div>
+    </section>
+
+    <section id="listingPage" class="page">
+      <div class="listing-page">
+        <div class="breadcrumbs">
+          Головна / <span id="listingCategoryName">Категорія</span>
+        </div>
+
+        <div class="listing-head">
+          <div>
+            <h1 id="listingTitle">Назва категорії</h1>
+            <p id="listingText">Фото меблів цієї категорії</p>
+          </div>
+          <button class="back-btn" onclick="goHome()">← Назад на головну</button>
+        </div>
+
+        <div id="productsGrid" class="products-grid"></div>
+      </div>
+    </section>
+
+    <section id="detailPage" class="page">
+      <div class="detail-page">
+        <div class="breadcrumbs">
+          Головна / <span id="detailSubtypeName">Категорія</span> / <span id="detailProductName">Товар</span>
+        </div>
+
+        <div class="listing-head detail-head">
+          <div>
+            <h1 id="detailTitle">Назва товару</h1>
+            <p id="detailDescription">Опис товару</p>
+          </div>
+          <button class="back-btn" onclick="backToListing()">← Назад до товарів</button>
+        </div>
+
+        <div class="detail-box">
+          <div>
+            <div class="main-image-box">
+              <img id="mainDetailImage" src="" alt="Товар">
+            </div>
+            <div id="thumbs" class="thumbs"></div>
+          </div>
+
+          <div class="detail-info">
+            <h2>Інформація про товар</h2>
+            <ul id="detailSpecs" class="detail-list"></ul>
+
+            <div class="detail-contact">
+              <a class="btn-dark" href="#">Замовити в Telegram</a>
+              <a class="btn-light" href="#">Подзвонити</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Vinida © 2026 — меблі на замовлення
+  </footer>
+
+  <script>
+    const demoImage = (name) => `https://placehold.co/900x700?text=${encodeURIComponent(name)}`;
+
+    const catalog = {
+      "komody-zvychayni": {
+        title: "Звичайні комоди",
+        text: "Оберіть модель комода та перегляньте фото.",
+        products: [
+          {
+            id: "komod-1",
+            name: "Комод K-01",
+            short: "Простий комод із шухлядами",
+            size: "1200×800×450 мм",
+            cover: demoImage("Комод K-01"),
+            images: [demoImage("Комод K-01 / 1"), demoImage("Комод K-01 / 2"), demoImage("Комод K-01 / 3"), demoImage("Комод K-01 / 4")],
+            specs: ["Розмір: 1200×800×450 мм", "Матеріал: ЛДСП", "Колір можна змінити", "Можливе виготовлення під розмір"]
+          },
+          {
+            id: "komod-2",
+            name: "Комод K-02",
+            short: "Мінімалістичний комод для спальні",
+            size: "1000×850×400 мм",
+            cover: demoImage("Комод K-02"),
+            images: [demoImage("Комод K-02 / 1"), demoImage("Комод K-02 / 2"), demoImage("Комод K-02 / 3")],
+            specs: ["Розмір: 1000×850×400 мм", "Направляючі: телескопічні", "Кольори на вибір", "Підходить для спальні або вітальні"]
+          },
+          {
+            id: "komod-3",
+            name: "Комод K-03",
+            short: "Комод у сучасному стилі",
+            size: "1400×900×450 мм",
+            cover: demoImage("Комод K-03"),
+            images: [demoImage("Комод K-03 / 1"), demoImage("Комод K-03 / 2"), demoImage("Комод K-03 / 3")],
+            specs: ["Розмір: 1400×900×450 мм", "Сучасний фасад", "Можна змінити ручки", "Виготовлення під замовлення"]
+          }
+        ]
+      },
+
+      "komody-z-dvertsyatamy": {
+        title: "Комоди з дверцятами",
+        text: "Комоди з дверцятами та комбінованим наповненням.",
+        products: [
+          {
+            id: "komod-d-1",
+            name: "Комод KD-01",
+            short: "Комод із дверцятами та шухлядами",
+            size: "1300×850×450 мм",
+            cover: demoImage("Комод KD-01"),
+            images: [demoImage("Комод KD-01 / 1"), demoImage("Комод KD-01 / 2"), demoImage("Комод KD-01 / 3")],
+            specs: ["Комбіноване наповнення", "Можна змінити колір", "Підходить для вітальні"]
+          }
+        ]
+      },
+
+      "komody-rizni": {
+        title: "Різні комоди",
+        text: "Інші моделі комодів.",
+        products: [
+          {
+            id: "komod-r-1",
+            name: "Комод KR-01",
+            short: "Незвичайна модель комода",
+            size: "1100×820×420 мм",
+            cover: demoImage("Комод KR-01"),
+            images: [demoImage("Комод KR-01 / 1"), demoImage("Комод KR-01 / 2")],
+            specs: ["Індивідуальний дизайн", "Різні варіанти фасадів"]
+          }
+        ]
+      },
+
+      "shafy-z-dvertsyatamy": {
+        title: "Шафи з дверцятами",
+        text: "Шафи класичного типу з розпашними дверцятами.",
+        products: [
+          {
+            id: "shafa-1",
+            name: "Шафа S-01",
+            short: "Шафа 2000×900×450",
+            size: "2000×900×450 мм",
+            cover: demoImage("Шафа S-01"),
+            images: [demoImage("Шафа S-01 / 1"), demoImage("Шафа S-01 / 2"), demoImage("Шафа S-01 / 3"), demoImage("Шафа S-01 / 4")],
+            specs: ["3 варіанти наповнення", "Полиці / труба / комбінована", "Кольори на вибір", "Під замовлення"]
+          },
+          {
+            id: "shafa-2",
+            name: "Шафа S-02",
+            short: "Дводверна шафа для коридору або спальні",
+            size: "2100×1000×500 мм",
+            cover: demoImage("Шафа S-02"),
+            images: [demoImage("Шафа S-02 / 1"), demoImage("Шафа S-02 / 2"), demoImage("Шафа S-02 / 3")],
+            specs: ["Містке наповнення", "Можна змінити розміри", "Є різні кольори ЛДСП"]
+          }
+        ]
+      },
+
+      "shafy-kupe": {
+        title: "Шафи купе",
+        text: "Моделі шаф купе.",
+        products: [
+          {
+            id: "kupe-1",
+            name: "Шафа купе SK-01",
+            short: "Шафа купе з дзеркалом",
+            size: "2400×1800×600 мм",
+            cover: demoImage("Шафа купе SK-01"),
+            images: [demoImage("Шафа купе SK-01 / 1"), demoImage("Шафа купе SK-01 / 2"), demoImage("Шафа купе SK-01 / 3")],
+            specs: ["Фасад: дзеркало + ЛДСП", "Наповнення індивідуальне", "Розмір можна змінити"]
+          }
+        ]
+      },
+
+      "kuhni-pryami": {
+        title: "Прямі кухні",
+        text: "Прямі кухонні гарнітури.",
+        products: [
+          {
+            id: "kuhnya-1",
+            name: "Кухня KP-01",
+            short: "Пряма кухня в сучасному стилі",
+            size: "3000 мм",
+            cover: demoImage("Кухня KP-01"),
+            images: [demoImage("Кухня KP-01 / 1"), demoImage("Кухня KP-01 / 2"), demoImage("Кухня KP-01 / 3")],
+            specs: ["Пряма кухня", "Фасади і колір на вибір", "Розрахунок під приміщення"]
+          }
+        ]
+      },
+
+      "kuhni-kutovi": {
+        title: "Кутові кухні",
+        text: "Кутові кухні для різних планувань.",
+        products: [
+          {
+            id: "kuhnya-k-1",
+            name: "Кутова кухня KK-01",
+            short: "Практична кутова кухня",
+            size: "2600×1800 мм",
+            cover: demoImage("Кутова кухня KK-01"),
+            images: [demoImage("Кутова кухня KK-01 / 1"), demoImage("Кутова кухня KK-01 / 2"), demoImage("Кутова кухня KK-01 / 3")],
+            specs: ["Кутове планування", "Розрахунок під замовлення", "Можливі різні матеріали"]
+          }
+        ]
+      },
+
+      "vishalky": {
+        title: "Вішалки",
+        text: "Настінні та підлогові вішалки.",
+        products: [
+          {
+            id: "vishalka-1",
+            name: "Вішалка V-01",
+            short: "Стильна вішалка для прихожої",
+            size: "900×1200 мм",
+            cover: demoImage("Вішалка V-01"),
+            images: [demoImage("Вішалка V-01 / 1"), demoImage("Вішалка V-01 / 2")],
+            specs: ["Для прихожої", "Можливі різні кольори"]
+          }
+        ]
+      },
+
+      "obuvnytsi": {
+        title: "Обувниці",
+        text: "Обувниці різних форматів.",
+        products: [
+          {
+            id: "obuvnytsya-1",
+            name: "Обувниця O-01",
+            short: "Компактна обувниця для коридору",
+            size: "800×1000×350 мм",
+            cover: demoImage("Обувниця O-01"),
+            images: [demoImage("Обувниця O-01 / 1"), demoImage("Обувниця O-01 / 2"), demoImage("Обувниця O-01 / 3")],
+            specs: ["Компактний розмір", "Підходить для невеликого коридору"]
+          }
+        ]
+      },
+
+      "pryhozhi": {
+        title: "Прихожі",
+        text: "Комплекти меблів для прихожої.",
+        products: [
+          {
+            id: "pryhozha-1",
+            name: "Прихожа P-01",
+            short: "Тумба + вішалка в одному стилі",
+            size: "Індивідуально",
+            cover: demoImage("Прихожа P-01"),
+            images: [demoImage("Прихожа P-01 / 1"), demoImage("Прихожа P-01 / 2"), demoImage("Прихожа P-01 / 3")],
+            specs: ["Комплект для прихожої", "Кольори на вибір", "Можна змінити конфігурацію"]
+          }
+        ]
+      },
+
+      "stoly-kuhonni": {
+        title: "Кухонні столи",
+        text: "Столи для кухні та обідньої зони.",
+        products: [
+          {
+            id: "stil-k-1",
+            name: "Стіл KST-01",
+            short: "Кухонний стіл у світлому стилі",
+            size: "1200×700 мм",
+            cover: demoImage("Стіл KST-01"),
+            images: [demoImage("Стіл KST-01 / 1"), demoImage("Стіл KST-01 / 2")],
+            specs: ["Підходить для кухні", "Можливі різні кольори стільниці"]
+          }
+        ]
+      },
+
+      "stoly-pysmovi": {
+        title: "Письмові столи",
+        text: "Письмові та робочі столи.",
+        products: [
+          {
+            id: "stil-p-1",
+            name: "Стіл PST-01",
+            short: "Письмовий стіл для дому або офісу",
+            size: "1400×600 мм",
+            cover: demoImage("Стіл PST-01"),
+            images: [demoImage("Стіл PST-01 / 1"), demoImage("Стіл PST-01 / 2"), demoImage("Стіл PST-01 / 3")],
+            specs: ["Для офісу або дому", "Можна зробити з шухлядами"]
+          }
+        ]
+      },
+
+      "stoly-zhurnalni": {
+        title: "Столи журнальні",
+        text: "Журнальні столи для вітальні.",
+        products: [
+          {
+            id: "stil-zh-1",
+            name: "Журнальний стіл J-01",
+            short: "Малий стіл для вітальні",
+            size: "900×500 мм",
+            cover: demoImage("Журнальний стіл J-01"),
+            images: [demoImage("Журнальний стіл J-01 / 1"), demoImage("Журнальний стіл J-01 / 2")],
+            specs: ["Компактний формат", "Підходить для вітальні"]
+          }
+        ]
+      },
+
+      "stoly-rizni": {
+        title: "Різні столи",
+        text: "Інші моделі столів.",
+        products: [
+          {
+            id: "stil-r-1",
+            name: "Стіл R-01",
+            short: "Нестандартний стіл під замовлення",
+            size: "Індивідуально",
+            cover: demoImage("Стіл R-01"),
+            images: [demoImage("Стіл R-01 / 1"), demoImage("Стіл R-01 / 2")],
+            specs: ["Індивідуальне виготовлення", "Різні варіанти виконання"]
+          }
+        ]
+      },
+
+      "polytsi": {
+        title: "Полиці",
+        text: "Навісні та підлогові полиці.",
+        products: [
+          {
+            id: "polytsya-1",
+            name: "Полиця P-01",
+            short: "Настінна полиця сучасного типу",
+            size: "1000 мм",
+            cover: demoImage("Полиця P-01"),
+            images: [demoImage("Полиця P-01 / 1"), demoImage("Полиця P-01 / 2")],
+            specs: ["Настінне кріплення", "Різні кольори"]
+          }
+        ]
+      },
+
+      "lizhka-odnospalni": {
+        title: "Односпальні ліжка",
+        text: "Односпальні моделі ліжок.",
+        products: [
+          {
+            id: "lizhko-1",
+            name: "Ліжко L-01",
+            short: "Односпальне ліжко",
+            size: "900×2000 мм",
+            cover: demoImage("Ліжко L-01"),
+            images: [demoImage("Ліжко L-01 / 1"), demoImage("Ліжко L-01 / 2")],
+            specs: ["Основа під матрац", "Різні кольори корпусу"]
+          }
+        ]
+      },
+
+      "lizhka-dvospalni": {
+        title: "Двохспальні ліжка",
+        text: "Двохспальні моделі ліжок.",
+        products: [
+          {
+            id: "lizhko-d-1",
+            name: "Ліжко LD-01",
+            short: "Двохспальне ліжко для спальні",
+            size: "1600×2000 мм",
+            cover: demoImage("Ліжко LD-01"),
+            images: [demoImage("Ліжко LD-01 / 1"), demoImage("Ліжко LD-01 / 2"), demoImage("Ліжко LD-01 / 3")],
+            specs: ["Двохспальне", "Міцна конструкція", "Можливі різні кольори"]
+          }
+        ]
+      },
+
+      "lizhka-myaki": {
+        title: "М'які ліжка",
+        text: "М'які ліжка з узголів'ям.",
+        products: [
+          {
+            id: "lizhko-m-1",
+            name: "М'яке ліжко LM-01",
+            short: "М'яке ліжко з узголів'ям",
+            size: "1600×2000 мм",
+            cover: demoImage("М'яке ліжко LM-01"),
+            images: [demoImage("М'яке ліжко LM-01 / 1"), demoImage("М'яке ліжко LM-01 / 2"), demoImage("М'яке ліжко LM-01 / 3")],
+            specs: ["М'яке узголів'я", "Тканина на вибір", "Різні відтінки"]
+          }
+        ]
+      },
+
+      "lizhka-rizni": {
+        title: "Різні ліжка",
+        text: "Інші моделі ліжок.",
+        products: [
+          {
+            id: "lizhko-r-1",
+            name: "Ліжко LR-01",
+            short: "Нестандартна модель ліжка",
+            size: "Індивідуально",
+            cover: demoImage("Ліжко LR-01"),
+            images: [demoImage("Ліжко LR-01 / 1"), demoImage("Ліжко LR-01 / 2")],
+            specs: ["Індивідуальний дизайн", "Можливе виготовлення під розмір"]
+          }
+        ]
+      },
+
+      "tv-tumby": {
+        title: "Тумби TV",
+        text: "Тумби під телевізор.",
+        products: [
+          {
+            id: "tv-1",
+            name: "Тумба TV-01",
+            short: "Тумба під телевізор у сучасному стилі",
+            size: "1600×450×400 мм",
+            cover: demoImage("Тумба TV-01"),
+            images: [demoImage("Тумба TV-01 / 1"), demoImage("Тумба TV-01 / 2"), demoImage("Тумба TV-01 / 3")],
+            specs: ["Для телевізора та техніки", "Різні кольори", "Можна змінити довжину"]
+          }
+        ]
+      },
+
+      "rizne": {
+        title: "Різне",
+        text: "Інші меблі та вироби.",
+        products: [
+          {
+            id: "rizne-1",
+            name: "Виріб R-01",
+            short: "Інша позиція з каталогу",
+            size: "Індивідуально",
+            cover: demoImage("Виріб R-01"),
+            images: [demoImage("Виріб R-01 / 1"), demoImage("Виріб R-01 / 2")],
+            specs: ["Індивідуальне виготовлення", "Уточнюйте деталі в повідомленні"]
+          }
+        ]
+      }
+    };
+
+    let currentSubtype = null;
+    let currentProduct = null;
+
+    const homePage = document.getElementById("homePage");
+    const listingPage = document.getElementById("listingPage");
+    const detailPage = document.getElementById("detailPage");
+
+    function showPage(page) {
+      document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+      page.classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function toggleSubmenu(id) {
+      document.getElementById(id).classList.toggle("open");
+    }
+
+    function goHome() {
+      currentSubtype = null;
+      currentProduct = null;
+      showPage(homePage);
+    }
+
+    function openSubtype(e, subtypeKey) {
+      e.preventDefault();
+      currentSubtype = subtypeKey;
+      const subtype = catalog[subtypeKey];
+      if (!subtype) return;
+
+      document.getElementById("listingCategoryName").textContent = subtype.title;
+      document.getElementById("listingTitle").textContent = subtype.title;
+      document.getElementById("listingText").textContent = subtype.text;
+
+      const productsGrid = document.getElementById("productsGrid");
+      productsGrid.innerHTML = "";
+
+      subtype.products.forEach(product => {
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${product.cover}" alt="${product.name}">
+          <div class="product-card-body">
+            <h3>${product.name}</h3>
+            <p>${product.short}</p>
+            <div class="product-meta">${product.size || ""}</div>
+          </div>
+        `;
+        card.onclick = () => openProduct(product.id);
+        productsGrid.appendChild(card);
+      });
+
+      showPage(listingPage);
+    }
+
+    function openProduct(productId) {
+      const subtype = catalog[currentSubtype];
+      if (!subtype) return;
+
+      const product = subtype.products.find(p => p.id === productId);
+      if (!product) return;
+
+      currentProduct = product;
+
+      document.getElementById("detailSubtypeName").textContent = subtype.title;
+      document.getElementById("detailProductName").textContent = product.name;
+      document.getElementById("detailTitle").textContent = product.name;
+      document.getElementById("detailDescription").textContent = product.short;
+
+      const mainImage = document.getElementById("mainDetailImage");
+      mainImage.src = product.images[0];
+
+      const specs = document.getElementById("detailSpecs");
+      specs.innerHTML = "";
+      product.specs.forEach(spec => {
+        const li = document.createElement("li");
+        li.textContent = spec;
+        specs.appendChild(li);
+      });
+
+      const thumbs = document.getElementById("thumbs");
+      thumbs.innerHTML = "";
+
+      product.images.forEach((img, index) => {
+        const thumb = document.createElement("img");
+        thumb.src = img;
+        thumb.alt = product.name + " " + (index + 1);
+        if (index === 0) thumb.classList.add("active");
+
+        thumb.onclick = () => {
+          mainImage.src = img;
+          document.querySelectorAll("#thumbs img").forEach(t => t.classList.remove("active"));
+          thumb.classList.add("active");
+        };
+
+        thumbs.appendChild(thumb);
+      });
+
+      showPage(detailPage);
+    }
+
+    function backToListing() {
+      showPage(listingPage);
+    }
+
+    let currentSlide = 0;
+    const slides = document.querySelectorAll(".carousel-slide");
+    const dotsWrap = document.getElementById("dots");
+
+    function renderDots() {
+      dotsWrap.innerHTML = "";
+      slides.forEach((_, index) => {
+        const dot = document.createElement("div");
+        dot.className = "dot" + (index === currentSlide ? " active" : "");
+        dot.onclick = () => goToSlide(index);
+        dotsWrap.appendChild(dot);
+      });
+    }
+
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        slide.classList.toggle("active", index === currentSlide);
+      });
+      renderDots();
+    }
+
+    function changeSlide(direction) {
+      currentSlide += direction;
+      if (currentSlide < 0) currentSlide = slides.length - 1;
+      if (currentSlide >= slides.length) currentSlide = 0;
+      updateSlides();
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      updateSlides();
+    }
+
+    updateSlides();
+
+    setInterval(() => {
+      if (homePage.classList.contains("active")) {
+        changeSlide(1);
+      }
+    }, 4000);
+  </script>
 </body>
 </html>

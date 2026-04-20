@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vinida — меблі на замовлення</title>
+  <title>ViNiDa — меблі на замовлення</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -302,6 +302,13 @@
       color: #777;
     }
 
+    .product-price {
+      margin-top: 10px;
+      font-size: 22px;
+      font-weight: 700;
+      color: #111;
+    }
+
     .detail-box {
       display: grid;
       grid-template-columns: 1.1fr 0.9fr;
@@ -354,6 +361,12 @@
     .detail-info h2 {
       margin-top: 0;
       font-size: 30px;
+    }
+
+    .detail-price {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 18px;
     }
 
     .detail-list {
@@ -506,15 +519,10 @@
           <h3>Каталог</h3>
 
           <div class="menu-item">
-            <button class="menu-btn" onclick="toggleSubmenu('komodyMenu')">
+            <button class="menu-btn" onclick="openKomodyCategories()">
               <span>Комоди</span>
-              <span>+</span>
+              <span>→</span>
             </button>
-            <div id="komodyMenu" class="submenu">
-              <a href="#" onclick="openSubtype(event, 'komody-zvychayni')">Звичайні комоди</a>
-              <a href="#" onclick="openSubtype(event, 'komody-z-dvertsyatamy')">Комоди з дверцятами</a>
-              <a href="#" onclick="openSubtype(event, 'komody-rizni')">Різні комоди</a>
-            </div>
           </div>
 
           <div class="menu-item">
@@ -588,7 +596,7 @@
             <h1 id="listingTitle">Назва категорії</h1>
             <p id="listingText">Фото меблів цієї категорії</p>
           </div>
-          <button class="back-btn" onclick="goHome()">← Назад на головну</button>
+          <button id="listingBackBtn" class="back-btn" onclick="goHome()">← Назад</button>
         </div>
 
         <div id="productsGrid" class="products-grid"></div>
@@ -619,6 +627,7 @@
 
           <div class="detail-info">
             <h2>Інформація про товар</h2>
+            <div id="detailPrice" class="detail-price"></div>
             <ul id="detailSpecs" class="detail-list"></ul>
 
             <div class="detail-contact">
@@ -632,43 +641,278 @@
   </main>
 
   <footer class="footer">
-    Vinida © 2026 — меблі на замовлення
+    ViNiDa © 2026 — меблі на замовлення
   </footer>
 
   <script>
     const demoImage = (name) => `https://placehold.co/900x700?text=${encodeURIComponent(name)}`;
 
+    const PRICE_SETTINGS = {
+      referenceUsdRate: 41.5,
+      currentUsdRate: 41.5,
+      defaultBasePriceUah: 3800
+    };
+
+    function calculateLivePrice(basePriceUah) {
+      const usdEquivalent = basePriceUah / PRICE_SETTINGS.referenceUsdRate;
+      const recalculatedUah = usdEquivalent * PRICE_SETTINGS.currentUsdRate;
+      return Math.round(recalculatedUah);
+    }
+
+    function formatPrice(price) {
+      return `${price.toLocaleString('uk-UA')} грн`;
+    }
+
+    function getProductPrice(product) {
+      const basePrice = product.basePriceUah ?? PRICE_SETTINGS.defaultBasePriceUah;
+      return formatPrice(calculateLivePrice(basePrice));
+    }
+
     const catalog = {
-      "komody-zvychayni": {
-        title: "Звичайні комоди",
-        text: "Оберіть модель комода та перегляньте фото.",
+      "komody-main": {
+        title: "Комоди",
+        text: "Оберіть підкатегорію комодів.",
         products: [
           {
-            id: "komod-1",
-            name: "Комод K-01",
-            short: "Простий комод із шухлядами",
-            size: "1200×800×450 мм",
-            cover: demoImage("Комод K-01"),
-            images: [demoImage("Комод K-01 / 1"), demoImage("Комод K-01 / 2"), demoImage("Комод K-01 / 3"), demoImage("Комод K-01 / 4")],
-            specs: ["Розмір: 1200×800×450 мм", "Матеріал: ЛДСП", "Колір можна змінити", "Можливе виготовлення під розмір"]
+            id: "komody-zvychayni-card",
+            name: "Комоди",
+            short: "Звичайні комоди з різною кількістю ящиків",
+            size: "",
+            cover: "images/Komod-k01.png",
+            action: "open-komody-regular"
           },
           {
-            id: "komod-2",
-            name: "Комод K-02",
-            short: "Мінімалістичний комод для спальні",
-            size: "1000×850×400 мм",
-            cover: demoImage("Комод K-02"),
-            images: [demoImage("Комод K-02 / 1"), demoImage("Комод K-02 / 2"), demoImage("Комод K-02 / 3")],
-            specs: ["Розмір: 1000×850×400 мм", "Направляючі: телескопічні", "Кольори на вибір", "Підходить для спальні або вітальні"]
+            id: "komody-dvertsyata-card",
+            name: "Комоди з дверцятами",
+            short: "Комоди з дверцятами та комбінованим наповненням",
+            size: "",
+            cover: "images/Komod-dvertsyata.png",
+            action: "open-subtype",
+            target: "komody-z-dvertsyatamy"
           },
           {
-            id: "komod-3",
-            name: "Комод K-03",
-            short: "Комод у сучасному стилі",
-            size: "1400×900×450 мм",
-            cover: demoImage("Комод K-03"),
-            images: [demoImage("Комод K-03 / 1"), demoImage("Комод K-03 / 2"), demoImage("Комод K-03 / 3")],
-            specs: ["Розмір: 1400×900×450 мм", "Сучасний фасад", "Можна змінити ручки", "Виготовлення під замовлення"]
+            id: "komody-rizni-card",
+            name: "Різні",
+            short: "Інші моделі комодів",
+            size: "",
+            cover: "images/Komod-rizni.png",
+            action: "open-subtype",
+            target: "komody-rizni"
+          }
+        ]
+      },
+
+      "komody-zvychayni": {
+        title: "Комоди",
+        text: "Оберіть модель комода.",
+        products: [
+          {
+            id: "komod-k01-main",
+            name: "Комод на 3 ящики",
+            short: "Модель комода на 3 ящики",
+            size: "",
+            cover: "images/Komod-k01.png",
+            action: "open-product-group",
+            groupId: "komod-k01-group"
+          },
+          {
+            id: "komod-k13-main",
+            name: "Комод на 4 ящики",
+            short: "Модель комода на 4 ящики",
+            size: "",
+            cover: "images/Komod-k13.png",
+            action: "open-product-group",
+            groupId: "komod-k13-group"
+          },
+          {
+            id: "komod-k22-main",
+            name: "Комод на 5 ящиків",
+            short: "Модель комода на 5 ящиків",
+            size: "",
+            cover: "images/Komod-k22.png",
+            action: "open-product-group",
+            groupId: "komod-k22-group"
+          }
+        ]
+      },
+
+      "komod-k01-group": {
+        title: "Комод на 3 ящики",
+        text: "Оберіть варіант моделі.",
+        products: [
+          {
+            id: "komod-k01-v1",
+            name: "Варіант 1",
+            short: "Комод на 3 ящики — варіант 1",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k01.png",
+            images: ["images/Komod-k01.png"],
+            specs: [
+              "Комод на 3 ящики",
+              "Варіант 1",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k01-v2",
+            name: "Варіант 2",
+            short: "Комод на 3 ящики — варіант 2",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k01.png",
+            images: ["images/Komod-k01.png"],
+            specs: [
+              "Комод на 3 ящики",
+              "Варіант 2",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k01-v3",
+            name: "Варіант 3",
+            short: "Комод на 3 ящики — варіант 3",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k01.png",
+            images: ["images/Komod-k01.png"],
+            specs: [
+              "Комод на 3 ящики",
+              "Варіант 3",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          }
+        ]
+      },
+
+      "komod-k13-group": {
+        title: "Комод на 4 ящики",
+        text: "Оберіть варіант моделі.",
+        products: [
+          {
+            id: "komod-k13-v1",
+            name: "Варіант 1",
+            short: "Комод на 4 ящики — варіант 1",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k13.png",
+            images: ["images/Komod-k13.png"],
+            specs: [
+              "Комод на 4 ящики",
+              "Варіант 1",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k13-v2",
+            name: "Варіант 2",
+            short: "Комод на 4 ящики — варіант 2",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k13.png",
+            images: ["images/Komod-k13.png"],
+            specs: [
+              "Комод на 4 ящики",
+              "Варіант 2",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k13-v3",
+            name: "Варіант 3",
+            short: "Комод на 4 ящики — варіант 3",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k13.png",
+            images: ["images/Komod-k13.png"],
+            specs: [
+              "Комод на 4 ящики",
+              "Варіант 3",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k13-v4",
+            name: "Варіант 4",
+            short: "Комод на 4 ящики — варіант 4",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k13.png",
+            images: ["images/Komod-k13.png"],
+            specs: [
+              "Комод на 4 ящики",
+              "Варіант 4",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k13-v5",
+            name: "Варіант 5",
+            short: "Комод на 4 ящики — варіант 5",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k13.png",
+            images: ["images/Komod-k13.png"],
+            specs: [
+              "Комод на 4 ящики",
+              "Варіант 5",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          }
+        ]
+      },
+
+      "komod-k22-group": {
+        title: "Комод на 5 ящиків",
+        text: "Оберіть варіант моделі.",
+        products: [
+          {
+            id: "komod-k22-v1",
+            name: "Варіант 1",
+            short: "Комод на 5 ящиків — варіант 1",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k22.png",
+            images: ["images/Komod-k22.png"],
+            specs: [
+              "Комод на 5 ящиків",
+              "Варіант 1",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
+          },
+          {
+            id: "komod-k22-v2",
+            name: "Варіант 2",
+            short: "Комод на 5 ящиків — варіант 2",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-k22.png",
+            images: ["images/Komod-k22.png"],
+            specs: [
+              "Комод на 5 ящиків",
+              "Варіант 2",
+              "Матеріал: ЛДСП",
+              "Колір можна змінити",
+              "Можливе виготовлення під розмір"
+            ]
           }
         ]
       },
@@ -679,28 +923,39 @@
         products: [
           {
             id: "komod-d-1",
-            name: "Комод KD-01",
+            name: "Комод з дверцятами",
             short: "Комод із дверцятами та шухлядами",
-            size: "1300×850×450 мм",
-            cover: demoImage("Комод KD-01"),
-            images: [demoImage("Комод KD-01 / 1"), demoImage("Комод KD-01 / 2"), demoImage("Комод KD-01 / 3")],
-            specs: ["Комбіноване наповнення", "Можна змінити колір", "Підходить для вітальні"]
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-dvertsyata.png",
+            images: ["images/Komod-dvertsyata.png"],
+            specs: [
+              "Комод з дверцятами",
+              "Комбіноване наповнення",
+              "Можна змінити колір",
+              "Підходить для вітальні"
+            ]
           }
         ]
       },
 
       "komody-rizni": {
-        title: "Різні комоди",
+        title: "Різні",
         text: "Інші моделі комодів.",
         products: [
           {
             id: "komod-r-1",
-            name: "Комод KR-01",
-            short: "Незвичайна модель комода",
-            size: "1100×820×420 мм",
-            cover: demoImage("Комод KR-01"),
-            images: [demoImage("Комод KR-01 / 1"), demoImage("Комод KR-01 / 2")],
-            specs: ["Індивідуальний дизайн", "Різні варіанти фасадів"]
+            name: "Різний комод",
+            short: "Інша модель комода",
+            size: "",
+            basePriceUah: 3800,
+            cover: "images/Komod-rizni.png",
+            images: ["images/Komod-rizni.png"],
+            specs: [
+              "Різна модель комода",
+              "Індивідуальний дизайн",
+              "Різні варіанти фасадів"
+            ]
           }
         ]
       },
@@ -714,6 +969,7 @@
             name: "Шафа S-01",
             short: "Шафа 2000×900×450",
             size: "2000×900×450 мм",
+            basePriceUah: 3800,
             cover: demoImage("Шафа S-01"),
             images: [demoImage("Шафа S-01 / 1"), demoImage("Шафа S-01 / 2"), demoImage("Шафа S-01 / 3"), demoImage("Шафа S-01 / 4")],
             specs: ["3 варіанти наповнення", "Полиці / труба / комбінована", "Кольори на вибір", "Під замовлення"]
@@ -723,6 +979,7 @@
             name: "Шафа S-02",
             short: "Дводверна шафа для коридору або спальні",
             size: "2100×1000×500 мм",
+            basePriceUah: 3800,
             cover: demoImage("Шафа S-02"),
             images: [demoImage("Шафа S-02 / 1"), demoImage("Шафа S-02 / 2"), demoImage("Шафа S-02 / 3")],
             specs: ["Містке наповнення", "Можна змінити розміри", "Є різні кольори ЛДСП"]
@@ -739,6 +996,7 @@
             name: "Шафа купе SK-01",
             short: "Шафа купе з дзеркалом",
             size: "2400×1800×600 мм",
+            basePriceUah: 3800,
             cover: demoImage("Шафа купе SK-01"),
             images: [demoImage("Шафа купе SK-01 / 1"), demoImage("Шафа купе SK-01 / 2"), demoImage("Шафа купе SK-01 / 3")],
             specs: ["Фасад: дзеркало + ЛДСП", "Наповнення індивідуальне", "Розмір можна змінити"]
@@ -755,6 +1013,7 @@
             name: "Кухня KP-01",
             short: "Пряма кухня в сучасному стилі",
             size: "3000 мм",
+            basePriceUah: 3800,
             cover: demoImage("Кухня KP-01"),
             images: [demoImage("Кухня KP-01 / 1"), demoImage("Кухня KP-01 / 2"), demoImage("Кухня KP-01 / 3")],
             specs: ["Пряма кухня", "Фасади і колір на вибір", "Розрахунок під приміщення"]
@@ -771,6 +1030,7 @@
             name: "Кутова кухня KK-01",
             short: "Практична кутова кухня",
             size: "2600×1800 мм",
+            basePriceUah: 3800,
             cover: demoImage("Кутова кухня KK-01"),
             images: [demoImage("Кутова кухня KK-01 / 1"), demoImage("Кутова кухня KK-01 / 2"), demoImage("Кутова кухня KK-01 / 3")],
             specs: ["Кутове планування", "Розрахунок під замовлення", "Можливі різні матеріали"]
@@ -787,6 +1047,7 @@
             name: "Вішалка V-01",
             short: "Стильна вішалка для прихожої",
             size: "900×1200 мм",
+            basePriceUah: 3800,
             cover: demoImage("Вішалка V-01"),
             images: [demoImage("Вішалка V-01 / 1"), demoImage("Вішалка V-01 / 2")],
             specs: ["Для прихожої", "Можливі різні кольори"]
@@ -803,6 +1064,7 @@
             name: "Обувниця O-01",
             short: "Компактна обувниця для коридору",
             size: "800×1000×350 мм",
+            basePriceUah: 3800,
             cover: demoImage("Обувниця O-01"),
             images: [demoImage("Обувниця O-01 / 1"), demoImage("Обувниця O-01 / 2"), demoImage("Обувниця O-01 / 3")],
             specs: ["Компактний розмір", "Підходить для невеликого коридору"]
@@ -819,6 +1081,7 @@
             name: "Прихожа P-01",
             short: "Тумба + вішалка в одному стилі",
             size: "Індивідуально",
+            basePriceUah: 3800,
             cover: demoImage("Прихожа P-01"),
             images: [demoImage("Прихожа P-01 / 1"), demoImage("Прихожа P-01 / 2"), demoImage("Прихожа P-01 / 3")],
             specs: ["Комплект для прихожої", "Кольори на вибір", "Можна змінити конфігурацію"]
@@ -835,6 +1098,7 @@
             name: "Стіл KST-01",
             short: "Кухонний стіл у світлому стилі",
             size: "1200×700 мм",
+            basePriceUah: 3800,
             cover: demoImage("Стіл KST-01"),
             images: [demoImage("Стіл KST-01 / 1"), demoImage("Стіл KST-01 / 2")],
             specs: ["Підходить для кухні", "Можливі різні кольори стільниці"]
@@ -851,6 +1115,7 @@
             name: "Стіл PST-01",
             short: "Письмовий стіл для дому або офісу",
             size: "1400×600 мм",
+            basePriceUah: 3800,
             cover: demoImage("Стіл PST-01"),
             images: [demoImage("Стіл PST-01 / 1"), demoImage("Стіл PST-01 / 2"), demoImage("Стіл PST-01 / 3")],
             specs: ["Для офісу або дому", "Можна зробити з шухлядами"]
@@ -867,6 +1132,7 @@
             name: "Журнальний стіл J-01",
             short: "Малий стіл для вітальні",
             size: "900×500 мм",
+            basePriceUah: 3800,
             cover: demoImage("Журнальний стіл J-01"),
             images: [demoImage("Журнальний стіл J-01 / 1"), demoImage("Журнальний стіл J-01 / 2")],
             specs: ["Компактний формат", "Підходить для вітальні"]
@@ -883,6 +1149,7 @@
             name: "Стіл R-01",
             short: "Нестандартний стіл під замовлення",
             size: "Індивідуально",
+            basePriceUah: 3800,
             cover: demoImage("Стіл R-01"),
             images: [demoImage("Стіл R-01 / 1"), demoImage("Стіл R-01 / 2")],
             specs: ["Індивідуальне виготовлення", "Різні варіанти виконання"]
@@ -899,6 +1166,7 @@
             name: "Полиця P-01",
             short: "Настінна полиця сучасного типу",
             size: "1000 мм",
+            basePriceUah: 3800,
             cover: demoImage("Полиця P-01"),
             images: [demoImage("Полиця P-01 / 1"), demoImage("Полиця P-01 / 2")],
             specs: ["Настінне кріплення", "Різні кольори"]
@@ -915,6 +1183,7 @@
             name: "Ліжко L-01",
             short: "Односпальне ліжко",
             size: "900×2000 мм",
+            basePriceUah: 3800,
             cover: demoImage("Ліжко L-01"),
             images: [demoImage("Ліжко L-01 / 1"), demoImage("Ліжко L-01 / 2")],
             specs: ["Основа під матрац", "Різні кольори корпусу"]
@@ -931,6 +1200,7 @@
             name: "Ліжко LD-01",
             short: "Двохспальне ліжко для спальні",
             size: "1600×2000 мм",
+            basePriceUah: 3800,
             cover: demoImage("Ліжко LD-01"),
             images: [demoImage("Ліжко LD-01 / 1"), demoImage("Ліжко LD-01 / 2"), demoImage("Ліжко LD-01 / 3")],
             specs: ["Двохспальне", "Міцна конструкція", "Можливі різні кольори"]
@@ -947,6 +1217,7 @@
             name: "М'яке ліжко LM-01",
             short: "М'яке ліжко з узголів'ям",
             size: "1600×2000 мм",
+            basePriceUah: 3800,
             cover: demoImage("М'яке ліжко LM-01"),
             images: [demoImage("М'яке ліжко LM-01 / 1"), demoImage("М'яке ліжко LM-01 / 2"), demoImage("М'яке ліжко LM-01 / 3")],
             specs: ["М'яке узголів'я", "Тканина на вибір", "Різні відтінки"]
@@ -963,6 +1234,7 @@
             name: "Ліжко LR-01",
             short: "Нестандартна модель ліжка",
             size: "Індивідуально",
+            basePriceUah: 3800,
             cover: demoImage("Ліжко LR-01"),
             images: [demoImage("Ліжко LR-01 / 1"), demoImage("Ліжко LR-01 / 2")],
             specs: ["Індивідуальний дизайн", "Можливе виготовлення під розмір"]
@@ -979,6 +1251,7 @@
             name: "Тумба TV-01",
             short: "Тумба під телевізор у сучасному стилі",
             size: "1600×450×400 мм",
+            basePriceUah: 3800,
             cover: demoImage("Тумба TV-01"),
             images: [demoImage("Тумба TV-01 / 1"), demoImage("Тумба TV-01 / 2"), demoImage("Тумба TV-01 / 3")],
             specs: ["Для телевізора та техніки", "Різні кольори", "Можна змінити довжину"]
@@ -995,6 +1268,7 @@
             name: "Виріб R-01",
             short: "Інша позиція з каталогу",
             size: "Індивідуально",
+            basePriceUah: 3800,
             cover: demoImage("Виріб R-01"),
             images: [demoImage("Виріб R-01 / 1"), demoImage("Виріб R-01 / 2")],
             specs: ["Індивідуальне виготовлення", "Уточнюйте деталі в повідомленні"]
@@ -1005,6 +1279,7 @@
 
     let currentSubtype = null;
     let currentProduct = null;
+    let backMode = "home";
 
     const homePage = document.getElementById("homePage");
     const listingPage = document.getElementById("listingPage");
@@ -1023,11 +1298,17 @@
     function goHome() {
       currentSubtype = null;
       currentProduct = null;
+      backMode = "home";
       showPage(homePage);
     }
 
-    function openSubtype(e, subtypeKey) {
-      e.preventDefault();
+    function openKomodyCategories() {
+      currentSubtype = "komody-main";
+      backMode = "home";
+      renderListing("komody-main");
+    }
+
+    function renderListing(subtypeKey) {
       currentSubtype = subtypeKey;
       const subtype = catalog[subtypeKey];
       if (!subtype) return;
@@ -1036,25 +1317,78 @@
       document.getElementById("listingTitle").textContent = subtype.title;
       document.getElementById("listingText").textContent = subtype.text;
 
+      const backBtn = document.getElementById("listingBackBtn");
+      if (subtypeKey === "komody-main") {
+        backBtn.innerHTML = "← Назад на головну";
+        backBtn.onclick = goHome;
+      } else if (
+        subtypeKey === "komody-zvychayni" ||
+        subtypeKey === "komody-z-dvertsyatamy" ||
+        subtypeKey === "komody-rizni"
+      ) {
+        backBtn.innerHTML = "← Назад до комодів";
+        backBtn.onclick = openKomodyCategories;
+      } else if (
+        subtypeKey === "komod-k01-group" ||
+        subtypeKey === "komod-k13-group" ||
+        subtypeKey === "komod-k22-group"
+      ) {
+        backBtn.innerHTML = "← Назад до моделей";
+        backBtn.onclick = () => renderListing("komody-zvychayni");
+      } else {
+        backBtn.innerHTML = "← Назад на головну";
+        backBtn.onclick = goHome;
+      }
+
       const productsGrid = document.getElementById("productsGrid");
       productsGrid.innerHTML = "";
 
       subtype.products.forEach(product => {
         const card = document.createElement("div");
         card.className = "product-card";
+
+        const showPrice = !product.action;
+        const priceHtml = showPrice ? `<div class="product-price">${getProductPrice(product)}</div>` : "";
+
         card.innerHTML = `
           <img src="${product.cover}" alt="${product.name}">
           <div class="product-card-body">
             <h3>${product.name}</h3>
             <p>${product.short}</p>
             <div class="product-meta">${product.size || ""}</div>
+            ${priceHtml}
           </div>
         `;
-        card.onclick = () => openProduct(product.id);
+
+        card.onclick = () => handleCardClick(product);
         productsGrid.appendChild(card);
       });
 
       showPage(listingPage);
+    }
+
+    function handleCardClick(product) {
+      if (product.action === "open-komody-regular") {
+        renderListing("komody-zvychayni");
+        return;
+      }
+
+      if (product.action === "open-subtype") {
+        renderListing(product.target);
+        return;
+      }
+
+      if (product.action === "open-product-group") {
+        renderListing(product.groupId);
+        return;
+      }
+
+      openProduct(product.id);
+    }
+
+    function openSubtype(e, subtypeKey) {
+      e.preventDefault();
+      renderListing(subtypeKey);
     }
 
     function openProduct(productId) {
@@ -1070,6 +1404,7 @@
       document.getElementById("detailProductName").textContent = product.name;
       document.getElementById("detailTitle").textContent = product.name;
       document.getElementById("detailDescription").textContent = product.short;
+      document.getElementById("detailPrice").textContent = getProductPrice(product);
 
       const mainImage = document.getElementById("mainDetailImage");
       mainImage.src = product.images[0];

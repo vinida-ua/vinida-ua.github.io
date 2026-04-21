@@ -648,10 +648,27 @@
     const demoImage = (name) => `https://placehold.co/900x700?text=${encodeURIComponent(name)}`;
 
     const PRICE_SETTINGS = {
-      referenceUsdRate: 41.5,
-      currentUsdRate: 41.5,
-      defaultBasePriceUah: 3800
-    };
+  referenceUsdRate: 41.5,
+  currentUsdRate: 41.5,
+  defaultBasePriceUah: 3800
+};
+
+// 🔹 Завантаження курсу долара з НБУ
+async function loadUsdRate() {
+  try {
+    const response = await fetch("https://bank.gov.ua/NBUStatService/v1/statdirectory/exchange?valcode=USD&json");
+    const data = await response.json();
+
+    if (Array.isArray(data) && data.length > 0) {
+      PRICE_SETTINGS.currentUsdRate = data[0].rate;
+
+      // оновити ціни після завантаження курсу
+      refreshVisiblePrices();
+    }
+  } catch (error) {
+    console.error("Помилка курсу:", error);
+  }
+}
 
     function calculateLivePrice(basePriceUah) {
       const usdEquivalent = basePriceUah / PRICE_SETTINGS.referenceUsdRate;
@@ -667,6 +684,15 @@
       const basePrice = product.basePriceUah ?? PRICE_SETTINGS.defaultBasePriceUah;
       return formatPrice(calculateLivePrice(basePrice));
     }
+    function refreshVisiblePrices() {
+  if (currentSubtype) {
+    renderListing(currentSubtype);
+  }
+
+  if (currentProduct) {
+    document.getElementById("detailPrice").textContent = getProductPrice(currentProduct);
+  }
+}
 
     const catalog = {
       "komody-main": {
@@ -1578,6 +1604,7 @@
     }
 
     updateSlides();
+    loadUsdRate();
 
     setInterval(() => {
       if (homePage.classList.contains("active")) {

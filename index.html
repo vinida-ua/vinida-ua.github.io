@@ -524,16 +524,12 @@
               <span>→</span>
             </button>
           </div>
-
+          
           <div class="menu-item">
-            <button class="menu-btn" onclick="toggleSubmenu('shafyMenu')">
+            <button class="menu-btn" onclick="openKomodyCategories()">
               <span>Шафи</span>
-              <span>+</span>
+              <span>→</span>
             </button>
-            <div id="shafyMenu" class="submenu">
-              <a href="#" onclick="openSubtype(event, 'shafy-z-dvertsyatamy')">Шафи з дверцятами</a>
-              <a href="#" onclick="openSubtype(event, 'shafy-kupe')">Шафи купе</a>
-            </div>
           </div>
 
           <div class="menu-item">
@@ -1087,50 +1083,324 @@ async function loadUsdRate() {
           }
         ]
       },
+      "shafy-main": {
+  title: "Шафи",
+  text: "Оберіть підкатегорію шаф.",
+  products: [
+    {
+      id: "shafy-rozpashni-card",
+      name: "Шафи",
+      short: "Класичні шафи з дверцятами",
+      size: "",
+      cover: demoImage("Шафи"),
+      action: "open-subtype",
+      target: "shafy-rozpashni-main"
+    },
+    {
+      id: "shafy-kupe-card",
+      name: "Шафи купе",
+      short: "Шафи купе різних типів",
+      size: "",
+      cover: demoImage("Шафи купе"),
+      action: "open-subtype",
+      target: "shafy-kupe-main"
+    }
+  ]
+},
 
-      "shafy-z-dvertsyatamy": {
-        title: "Шафи з дверцятами",
-        text: "Шафи класичного типу з розпашними дверцятами.",
-        products: [
-          {
-            id: "shafa-1",
-            name: "Шафа S-01",
-            short: "Шафа 2000×900×450",
-            size: "2000×900×450 мм",
-            basePriceUah: 3800,
-            cover: demoImage("Шафа S-01"),
-            images: [demoImage("Шафа S-01 / 1"), demoImage("Шафа S-01 / 2"), demoImage("Шафа S-01 / 3"), demoImage("Шафа S-01 / 4")],
-            specs: ["3 варіанти наповнення", "Полиці / труба / комбінована", "Кольори на вибір", "Під замовлення"]
-          },
-          {
-            id: "shafa-2",
-            name: "Шафа S-02",
-            short: "Дводверна шафа для коридору або спальні",
-            size: "2100×1000×500 мм",
-            basePriceUah: 3800,
-            cover: demoImage("Шафа S-02"),
-            images: [demoImage("Шафа S-02 / 1"), demoImage("Шафа S-02 / 2"), demoImage("Шафа S-02 / 3")],
-            specs: ["Містке наповнення", "Можна змінити розміри", "Є різні кольори ЛДСП"]
-          }
-        ]
-      },
+"shafy-rozpashni-main": {
+  title: "Шафи",
+  text: "Оберіть тип шафи.",
+  products: [
+    {
+      id: "shafa-2-dveri-card",
+      name: "Шафи на 2 двері",
+      short: "Дводверні шафи",
+      size: "",
+      cover: demoImage("Шафи на 2 двері"),
+      action: "open-subtype",
+      target: "shafy-2-dveri"
+    },
+    {
+      id: "shafa-3-dveri-card",
+      name: "Шафи на 3 двері",
+      short: "Тридверні шафи",
+      size: "",
+      cover: demoImage("Шафи на 3 двері"),
+      action: "open-subtype",
+      target: "shafy-3-dveri"
+    },
+    {
+      id: "shafa-4-dveri-card",
+      name: "Шафи на 4 двері",
+      short: "Чотиридверні шафи",
+      size: "",
+      cover: demoImage("Шафи на 4 двері"),
+      action: "open-subtype",
+      target: "shafy-4-dveri"
+    },
+    {
+      id: "shafa-z-yashchykamy-card",
+      name: "Шафи з ящиками",
+      short: "Шафи з шухлядами",
+      size: "",
+      cover: demoImage("Шафи з ящиками"),
+      action: "open-subtype",
+      target: "shafy-z-yashchykamy"
+    },
+    {
+      id: "shafa-z-yashchykamy-bez-ruchok-card",
+      name: "Шафи з ящиками без ручок",
+      short: "Шафи з шухлядами без ручок",
+      size: "",
+      cover: demoImage("Шафи з ящиками без ручок"),
+      action: "open-subtype",
+      target: "shafy-z-yashchykamy-bez-ruchok"
+    }
+  ]
+},
 
-      "shafy-kupe": {
-        title: "Шафи купе",
-        text: "Моделі шаф купе.",
-        products: [
-          {
-            id: "kupe-1",
-            name: "Шафа купе SK-01",
-            short: "Шафа купе з дзеркалом",
-            size: "2400×1800×600 мм",
-            basePriceUah: 3800,
-            cover: demoImage("Шафа купе SK-01"),
-            images: [demoImage("Шафа купе SK-01 / 1"), demoImage("Шафа купе SK-01 / 2"), demoImage("Шафа купе SK-01 / 3")],
-            specs: ["Фасад: дзеркало + ЛДСП", "Наповнення індивідуальне", "Розмір можна змінити"]
-          }
-        ]
-      },
+"shafy-kupe-main": {
+  title: "Шафи купе",
+  text: "Оберіть тип шафи купе.",
+  products: [
+    {
+      id: "shafa-kupe-card",
+      name: "Шафи купе",
+      short: "Стандартні шафи купе",
+      size: "",
+      cover: demoImage("Шафи купе"),
+      action: "open-subtype",
+      target: "shafy-kupe-standart"
+    },
+    {
+      id: "shafa-kupe-radius-card",
+      name: "Шафи купе з радіусом",
+      short: "Радіусні шафи купе",
+      size: "",
+      cover: demoImage("Шафи купе з радіусом"),
+      action: "open-subtype",
+      target: "shafy-kupe-radius"
+    },
+    {
+      id: "shafa-kupe-rizni-card",
+      name: "Різні шафи купе",
+      short: "Інші моделі шаф купе",
+      size: "",
+      cover: demoImage("Різні шафи купе"),
+      action: "open-subtype",
+      target: "shafy-kupe-rizni"
+    }
+  ]
+},
+
+"shafy-2-dveri": {
+  title: "Шафи на 2 двері",
+  text: "Оберіть модель шафи на 2 двері.",
+  products: [
+    {
+      id: "shafa-2d-1",
+      name: "Шафа 2Д-01",
+      short: "Дводверна шафа",
+      size: "2000×900×450 мм",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа 2Д-01"),
+      images: [
+        demoImage("Шафа 2Д-01 / 1"),
+        demoImage("Шафа 2Д-01 / 2"),
+        demoImage("Шафа 2Д-01 / 3")
+      ],
+      specs: [
+        "Шафа на 2 двері",
+        "Матеріал: ЛДСП",
+        "Колір можна змінити",
+        "Можливе виготовлення під розмір"
+      ]
+    }
+  ]
+},
+
+"shafy-3-dveri": {
+  title: "Шафи на 3 двері",
+  text: "Оберіть модель шафи на 3 двері.",
+  products: [
+    {
+      id: "shafa-3d-1",
+      name: "Шафа 3Д-01",
+      short: "Тридверна шафа",
+      size: "2000×1350×450 мм",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа 3Д-01"),
+      images: [
+        demoImage("Шафа 3Д-01 / 1"),
+        demoImage("Шафа 3Д-01 / 2"),
+        demoImage("Шафа 3Д-01 / 3")
+      ],
+      specs: [
+        "Шафа на 3 двері",
+        "Матеріал: ЛДСП",
+        "Колір можна змінити",
+        "Можливе виготовлення під розмір"
+      ]
+    }
+  ]
+},
+
+"shafy-4-dveri": {
+  title: "Шафи на 4 двері",
+  text: "Оберіть модель шафи на 4 двері.",
+  products: [
+    {
+      id: "shafa-4d-1",
+      name: "Шафа 4Д-01",
+      short: "Чотиридверна шафа",
+      size: "2200×1800×550 мм",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа 4Д-01"),
+      images: [
+        demoImage("Шафа 4Д-01 / 1"),
+        demoImage("Шафа 4Д-01 / 2"),
+        demoImage("Шафа 4Д-01 / 3")
+      ],
+      specs: [
+        "Шафа на 4 двері",
+        "Матеріал: ЛДСП",
+        "Колір можна змінити",
+        "Можливе виготовлення під розмір"
+      ]
+    }
+  ]
+},
+
+"shafy-z-yashchykamy": {
+  title: "Шафи з ящиками",
+  text: "Оберіть модель шафи з ящиками.",
+  products: [
+    {
+      id: "shafa-yash-1",
+      name: "Шафа з ящиками 01",
+      short: "Шафа з шухлядами",
+      size: "2200×1200×550 мм",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа з ящиками 01"),
+      images: [
+        demoImage("Шафа з ящиками 01 / 1"),
+        demoImage("Шафа з ящиками 01 / 2"),
+        demoImage("Шафа з ящиками 01 / 3")
+      ],
+      specs: [
+        "Шафа з ящиками",
+        "Матеріал: ЛДСП",
+        "Колір можна змінити",
+        "Можливе виготовлення під розмір"
+      ]
+    }
+  ]
+},
+
+"shafy-z-yashchykamy-bez-ruchok": {
+  title: "Шафи з ящиками без ручок",
+  text: "Оберіть модель шафи без ручок.",
+  products: [
+    {
+      id: "shafa-yash-bez-ruchok-1",
+      name: "Шафа без ручок 01",
+      short: "Шафа з ящиками без ручок",
+      size: "2200×1200×550 мм",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа без ручок 01"),
+      images: [
+        demoImage("Шафа без ручок 01 / 1"),
+        demoImage("Шафа без ручок 01 / 2"),
+        demoImage("Шафа без ручок 01 / 3")
+      ],
+      specs: [
+        "Шафа з ящиками без ручок",
+        "Сучасні фасади",
+        "Колір можна змінити",
+        "Можливе виготовлення під розмір"
+      ]
+    }
+  ]
+},
+
+"shafy-kupe-standart": {
+  title: "Шафи купе",
+  text: "Оберіть модель шафи купе.",
+  products: [
+    {
+      id: "kupe-1",
+      name: "Шафа купе SK-01",
+      short: "Стандартна шафа купе",
+      size: "2400×1800×600 мм",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа купе SK-01"),
+      images: [
+        demoImage("Шафа купе SK-01 / 1"),
+        demoImage("Шафа купе SK-01 / 2"),
+        demoImage("Шафа купе SK-01 / 3")
+      ],
+      specs: [
+        "Шафа купе",
+        "Матеріал: ЛДСП / дзеркало",
+        "Наповнення індивідуальне",
+        "Розмір можна змінити"
+      ]
+    }
+  ]
+},
+
+"shafy-kupe-radius": {
+  title: "Шафи купе з радіусом",
+  text: "Оберіть модель радіусної шафи купе.",
+  products: [
+    {
+      id: "kupe-radius-1",
+      name: "Радіусна шафа купе RK-01",
+      short: "Шафа купе з радіусом",
+      size: "Індивідуально",
+      basePriceUah: 3800,
+      cover: demoImage("Радіусна шафа купе RK-01"),
+      images: [
+        demoImage("Радіусна шафа купе RK-01 / 1"),
+        demoImage("Радіусна шафа купе RK-01 / 2"),
+        demoImage("Радіусна шафа купе RK-01 / 3")
+      ],
+      specs: [
+        "Радіусна шафа купе",
+        "Індивідуальний прорахунок",
+        "Різні варіанти фасадів",
+        "Розмір можна змінити"
+      ]
+    }
+  ]
+},
+
+"shafy-kupe-rizni": {
+  title: "Різні шафи купе",
+  text: "Інші моделі шаф купе.",
+  products: [
+    {
+      id: "kupe-rizni-1",
+      name: "Шафа купе нестандартна 01",
+      short: "Нестандартна модель шафи купе",
+      size: "Індивідуально",
+      basePriceUah: 3800,
+      cover: demoImage("Шафа купе нестандартна 01"),
+      images: [
+        demoImage("Шафа купе нестандартна 01 / 1"),
+        demoImage("Шафа купе нестандартна 01 / 2"),
+        demoImage("Шафа купе нестандартна 01 / 3")
+      ],
+      specs: [
+        "Нестандартна шафа купе",
+        "Індивідуальний дизайн",
+        "Різні варіанти фасадів",
+        "Виготовлення під розмір"
+      ]
+    }
+  ]
+},
 
       "kuhni-pryami": {
         title: "Прямі кухні",
@@ -1436,6 +1706,12 @@ async function loadUsdRate() {
       renderListing("komody-main");
     }
 
+    function openShafyCategories() {
+      currentSubtype = "shafy-main";
+      backMode = "home";
+      renderListing("shafy-main");
+    }
+
     function renderListing(subtypeKey) {
       currentSubtype = subtypeKey;
       const subtype = catalog[subtypeKey];
@@ -1447,26 +1723,51 @@ async function loadUsdRate() {
 
       const backBtn = document.getElementById("listingBackBtn");
       if (subtypeKey === "komody-main") {
-        backBtn.innerHTML = "← Назад на головну";
-        backBtn.onclick = goHome;
-      } else if (
-        subtypeKey === "komody-zvychayni" ||
-        subtypeKey === "komody-z-dvertsyatamy" ||
-        subtypeKey === "komody-rizni"
-      ) {
-        backBtn.innerHTML = "← Назад до комодів";
-        backBtn.onclick = openKomodyCategories;
-      } else if (
-        subtypeKey === "komod-k01-group" ||
-        subtypeKey === "komod-k13-group" ||
-        subtypeKey === "komod-k22-group"
-      ) {
-        backBtn.innerHTML = "← Назад до моделей";
-        backBtn.onclick = () => renderListing("komody-zvychayni");
-      } else {
-        backBtn.innerHTML = "← Назад на головну";
-        backBtn.onclick = goHome;
-      }
+  backBtn.innerHTML = "← Назад на головну";
+  backBtn.onclick = goHome;
+} else if (
+  subtypeKey === "komody-zvychayni" ||
+  subtypeKey === "komody-z-dvertsyatamy" ||
+  subtypeKey === "komody-rizni"
+) {
+  backBtn.innerHTML = "← Назад до комодів";
+  backBtn.onclick = openKomodyCategories;
+} else if (
+  subtypeKey === "komod-k01-group" ||
+  subtypeKey === "komod-k13-group" ||
+  subtypeKey === "komod-k22-group"
+) {
+  backBtn.innerHTML = "← Назад до моделей";
+  backBtn.onclick = () => renderListing("komody-zvychayni");
+} else if (subtypeKey === "shafy-main") {
+  backBtn.innerHTML = "← Назад на головну";
+  backBtn.onclick = goHome;
+} else if (
+  subtypeKey === "shafy-rozpashni-main" ||
+  subtypeKey === "shafy-kupe-main"
+) {
+  backBtn.innerHTML = "← Назад до шаф";
+  backBtn.onclick = openShafyCategories;
+} else if (
+  subtypeKey === "shafy-2-dveri" ||
+  subtypeKey === "shafy-3-dveri" ||
+  subtypeKey === "shafy-4-dveri" ||
+  subtypeKey === "shafy-z-yashchykamy" ||
+  subtypeKey === "shafy-z-yashchykamy-bez-ruchok"
+) {
+  backBtn.innerHTML = "← Назад до вибору шаф";
+  backBtn.onclick = () => renderListing("shafy-rozpashni-main");
+} else if (
+  subtypeKey === "shafy-kupe-standart" ||
+  subtypeKey === "shafy-kupe-radius" ||
+  subtypeKey === "shafy-kupe-rizni"
+) {
+  backBtn.innerHTML = "← Назад до шаф купе";
+  backBtn.onclick = () => renderListing("shafy-kupe-main");
+} else {
+  backBtn.innerHTML = "← Назад на головну";
+  backBtn.onclick = goHome;
+}
 
       const productsGrid = document.getElementById("productsGrid");
       productsGrid.innerHTML = "";

@@ -1147,13 +1147,34 @@ async function loadUsdRate() {
   text: "Оберіть тип шафи купе.",
   products: [
     {
-      id: "shafa-kupe-card",
-      name: "Шафи купе",
-      short: "Класичні шафи купе",
+      "shafy-kupe": {
+  title: "Шафи купе",
+  text: "Оберіть модель шафи купе.",
+  products: [
+    {
+      id: "kupe-main",
+      name: "Шафа купе",
+      short: "Стандартна шафа купе",
       size: "",
+      basePriceUah: 3800,
       cover: "images/Shafa-Kupe-01.png",
-      action: "open-subtype",
-      target: "shafy-kupe"
+      images: [
+        "images/Shafa-Kupe-01.png",
+        "images/Shafa-Kupe-02.png",
+        "images/Shafa-Kupe-03.png",
+        "images/Shafa-Kupe-04.png",
+        "images/Shafa-Kupe-05.png"
+      ],
+      specs: [
+        "Шафа купе",
+        "Кілька варіантів дизайну",
+        "Матеріал: ЛДСП",
+        "Колір можна змінити",
+        "Можливе виготовлення під розмір"
+      ]
+    }
+  ]
+},
     },
     {
       id: "shafa-kupe-rizni-card",

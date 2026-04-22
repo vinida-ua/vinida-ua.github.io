@@ -1147,7 +1147,27 @@ async function loadUsdRate() {
   text: "Оберіть тип шафи купе.",
   products: [
     {
-      "shafy-kupe": {
+      id: "shafa-kupe-card",
+      name: "Шафи купе",
+      short: "Класичні шафи купе",
+      size: "",
+      cover: "images/Shafa-Kupe-01.png",
+      action: "open-subtype",
+      target: "shafy-kupe"
+    },
+    {
+      id: "shafa-kupe-rizni-card",
+      name: "Різні шафи купе",
+      short: "Інші моделі шаф купе",
+      size: "",
+      cover: "images/Shafa-Kupe-02.png",
+      action: "open-subtype",
+      target: "shafy-kupe-rizni"
+    }
+  ]
+},
+
+"shafy-kupe": {
   title: "Шафи купе",
   text: "Оберіть модель шафи купе.",
   products: [
@@ -1172,18 +1192,6 @@ async function loadUsdRate() {
         "Колір можна змінити",
         "Можливе виготовлення під розмір"
       ]
-    }
-  ]
-},
-    },
-    {
-      id: "shafa-kupe-rizni-card",
-      name: "Різні шафи купе",
-      short: "Інші моделі шаф купе",
-      size: "",
-      cover: "images/Shafa-Kupe-02.png",
-      action: "open-subtype",
-      target: "shafy-kupe-rizni"
     }
   ]
 },
@@ -1556,23 +1564,13 @@ async function loadUsdRate() {
   backBtn.innerHTML = "← Назад на головну";
   backBtn.onclick = goHome;
 } else if (
-  subtypeKey === "shafy-rozpashni-main" ||
+  subtypeKey === "shafy-regular" ||
   subtypeKey === "shafy-kupe-main"
 ) {
   backBtn.innerHTML = "← Назад до шаф";
   backBtn.onclick = openShafyCategories;
 } else if (
-  subtypeKey === "shafy-2-dveri" ||
-  subtypeKey === "shafy-3-dveri" ||
-  subtypeKey === "shafy-4-dveri" ||
-  subtypeKey === "shafy-z-yashchykamy" ||
-  subtypeKey === "shafy-z-yashchykamy-bez-ruchok"
-) {
-  backBtn.innerHTML = "← Назад до вибору шаф";
-  backBtn.onclick = () => renderListing("shafy-rozpashni-main");
-} else if (
-  subtypeKey === "shafy-kupe-standart" ||
-  subtypeKey === "shafy-kupe-radius" ||
+  subtypeKey === "shafy-kupe" ||
   subtypeKey === "shafy-kupe-rizni"
 ) {
   backBtn.innerHTML = "← Назад до шаф купе";
